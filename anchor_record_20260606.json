@@ -1,0 +1,21 @@
+{
+  "anchor_type": "genesis",
+  "project": "Combo C — Anticipatory Compliance (Kalshi radar)",
+  "purpose": "Pre-registration existence+method bound. Corpus and radar algorithm cryptographically bounded as-of 2026-06-06, before per-signal chaining begins. Establishes a 'no later than' bound separating confirmatory from exploratory analysis.",
+  "computed_utc": "2026-06-06T08:04:59Z",
+
+  "corpus_sha256": "a5989faaa895a642b0b7e4cd9ec21d7c19bb5e092fb5227951269b2293ef9853",
+  "corpus_desc": "kalshi_genesis_20260606.db — 16807130 signals, 2026-03-24T10:03:36..2026-06-06T06:29:54, 24058 markets, 7.79 GB",
+  "corpus_frozen_path": "CPX52:/home/deploy/anchors/kalshi_genesis_20260606.db (chmod 444, sqlite3 .backup of live snapshot, consistent)",
+
+  "algorithm_sha256": "dee01a7451dfdfa1ff6624a702e5781a4d74ee50b1eda8fbb50fafec8e8ca6aa",
+  "algorithm_desc": "RADAR_ALGORITHM.md v1.4b as-of 2026-06-06 (file mtime 2026-05-21T06:16:10Z, 9959 bytes). Method = weekly radar: threshold tiers (Material/Alert/Review/Noise), NO_CATALYST flags, lead-time claims, evidence-count triggers.",
+
+  "live_file_digest_note": "6538914b2221c6ee4f7f3b44bafd6ed6adf713344afae08810562852f41f4a05 (digest of LIVE snapshot @ 2026-06-06T07:54:41Z, pre-freeze; non-canonical historical note — frozen-copy hash above is canonical, .backup rewrites page layout)",
+
+  "anchoring_plan": {
+    "today": "OpenTimestamps on THIS record (binds the DB + method by contained hashes; Bitcoin timestamp)",
+    "this_week": "dedicated public repo (push-log timestamp = independent 2nd channel); home for ongoing daily Tier A/B chain-heads",
+    "paper_time": "Zenodo deposit (frozen corpus + anchors, citable DOI)"
+  }
+}

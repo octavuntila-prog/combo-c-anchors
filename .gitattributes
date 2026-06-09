@@ -1,0 +1,5 @@
+# Byte-exactness is the whole point: the OpenTimestamps-stamped records must hash
+# IDENTICALLY on every clone, on every OS, so sha256(record) verifies against the .ots
+# Bitcoin proof. Disable ALL line-ending conversion -- a checkout that rewrites LF->CRLF
+# would change the record's sha and silently break the attestation.
+* -text

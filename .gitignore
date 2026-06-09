@@ -1,0 +1,17 @@
+# Secondary net: nothing operational/internal must ever enter the public history.
+# (The staging dir is already a hand-triaged subset; this is belt-and-suspenders.)
+*.csv.gz
+*collector*
+ops_log*
+*_diag*
+gap_dump*
+cleanup_*
+alter_chain*
+*.ots.bak
+
+# Data + build artifacts
+*.db
+*.db-journal
+*.sqlite
+__pycache__/
+*.pyc

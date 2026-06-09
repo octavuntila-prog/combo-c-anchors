@@ -1,0 +1,16 @@
+{
+  "anchor_type": "gap",
+  "project": "Combo C - Anticipatory Compliance (Kalshi radar)",
+  "purpose": "Existence bound for the inter-deploy collection cycle (rows between corpus freeze and chain activation), so every corpus row carries at least an existence anchor.",
+  "computed_utc": "2026-06-06T17:55:00Z",
+  "gap_sha256": "87fa8b8d817123269a812f26c187e9413aadd50b19ce74ec3d1328aefbb9361b",
+  "gap_desc": "gap_rows_20260606.csv.gz - 20406 signals, id 16807131..16827536, uniform signal ts 2026-06-06T07:54:08.371626Z (single cycle-start timestamp)",
+  "gap_frozen_artifact": "CPX52:/home/deploy/anchors/gap_rows_20260606.csv.gz",
+  "cause": "Legitimate collection cycle (signal timestamp 2026-06-06T07:54:08Z = cycle start; committed ~08:18Z per service log) executed by the pre-patch collector. It was in-flight (uncommitted) in the live container DB at the genesis freeze (07:54:41Z, a .backup of the lagging host snapshot), hence excluded from corpus a5989f despite a near-coincident timestamp; it predates chain activation (09:00:30Z). Existence-anchored here as of this record's OpenTimestamps stamp, disclosed as a same-day anchor. Rows remain in the live DB (legitimate signals); this artifact only establishes their existence bound.",
+  "relation": {
+    "tier_0_genesis": "a5989faaa895a642b0b7e4cd9ec21d7c19bb5e092fb5227951269b2293ef9853 (rows 1..16807130) - anchor_record_20260606.json, OTS 919180a9",
+    "this_gap": "rows 16807131..16827536 (20406) - existence bound, this record",
+    "tier_A_chain": "rows 16827537+ - per-signal chain registration (chain_verify.py)"
+  },
+  "note": "Separate OTS stamp by necessity: the genesis anchor record (919180a9) is cryptographically closed and cannot be appended retroactively."
+}
