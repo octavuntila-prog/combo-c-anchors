@@ -1,0 +1,37 @@
+{
+  "anchor_type": "head",
+  "project": "Combo C - Anticipatory Compliance (Kalshi radar)",
+  "purpose": "First periodic head anchor. Gives a Bitcoin upper-time-bound ('existed no later than') to every Tier-A chained row from the boundary through this head - the coverage the genesis+gap anchors (id <= 16,827,536) do not extend to. One head anchor covers all prior chained rows via the hash chain.",
+  "computed_utc": "2026-07-18T13:08:04Z",
+
+  "head_id": 31955276,
+  "head_hash": "3364249fce72b662c7232a3396fde7cd1de25c2af6bd8e1457f80ab479fd6ee0",
+  "head_signal_ts": "2026-07-18T11:57:08.717617+00:00",
+
+  "chain_state": {
+    "total_rows": 31914456,
+    "chained_rows": 15086920,
+    "null_after_boundary": 0,
+    "boundary_first_chained": 16827537,
+    "identity": "chained = COUNT(*) - 16,827,536 -> 31,914,456 - 16,827,536 = 15,086,920 (holds exactly). NOTE: the id-space above the boundary has 40,820 holes (AUTOINCREMENT ids consumed by rolled-back pre-WAL collection cycles and deleted unchained orphans), so max(id)-based counts overcount; COUNT(*) is the canonical identity. No chained row is missing - the full walk links every chained row.",
+    "walk_output": "total=31,914,456 chained=15,086,920 null_after_boundary=0 boundary_first=16827537 max_ts=2026-07-18T11:57:08.717617+00:00 | CHAIN OK: 15,086,920 rows from genesis; head=3364249fce72b662 (170.0s) | HEALTH: GREEN"
+  },
+
+  "verification": {
+    "method": "_snapshot_verify.py (PRIMARY): full-chain recompute from genesis a5989faa... over the static host snapshot, single-pass, mode=ro; every stored hash recomputed, every prev-link checked, boundary row links to the genesis corpus hash.",
+    "freshness_gate": "GREEN at 2026-07-18T13:02:15Z (snapshot age 554s < 900s threshold)",
+    "snapshot": "CPX52:/home/deploy/kalshi_dashboard/data/kalshi_signals_snapshot.db (produced by the /10 stepped-.backup sync pipeline, journal_mode=DELETE on dest, tail-linked sanity-checked)",
+    "head_row_consistency": "the stored hash of the top chained row (SELECT ... ORDER BY id DESC LIMIT 1) equals the recomputed walk head - the walk verifies every stored hash including the head row's, so head_hash above is the recomputed chain head, not merely a stored value."
+  },
+
+  "coverage": {
+    "tier_0_genesis": "rows 1..16,807,130 - anchor_record_20260606.json (OTS -> Bitcoin, attested)",
+    "gap": "rows 16,807,131..16,827,536 - gap_anchor_record_20260606.json (OTS -> Bitcoin, attested)",
+    "this_head": "all 15,086,920 chained rows, ids 16,827,537..31,955,276 - THIS record. Any rewrite of any chained row at or below the head breaks the recomputed chain against head_hash.",
+    "after_this_head": "rows with id > 31,955,276 are chain-linked back to this head and await the next periodic head anchor."
+  },
+
+  "semantics": "The chain hash uses no secret -> public verifiability (anyone can recompute the walk from the data alone). It is THIS external anchor that pins time: content whose recomputed chain head equals head_hash existed no later than the Bitcoin attestation of this record. Secret-lessness alone does not stop author backdating; the Bitcoin anchor does.",
+
+  "ots_status": "Stamped 2026-07-18 via public OpenTimestamps calendar servers; the accompanying .ots proof is the authoritative list of calendar commitments actually obtained. Bitcoin attestation pending calendar aggregation at commit time. Upgrade the .ots via ots_upgrade.py (typically hours), same flow as the genesis/gap proofs (both since attested on-chain)."
+}

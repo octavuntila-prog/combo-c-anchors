@@ -10,9 +10,11 @@ Threat model: defeat AUTHOR backdating, not just third-party tampering.
    author can recompute a public chain under any timestamps. The EXTERNAL anchor
    is what pins time -- a hash stamped into Bitcoin cannot be matched to altered
    content.
-   + external anchoring (OpenTimestamps -> Bitcoin). By design one head anchor
-   covers all prior rows via the chain; today the instantiated anchors are the
-   genesis + gap (id <= 16,827,536) and the growing head awaits its own anchor.
+   + external anchoring (OpenTimestamps -> Bitcoin). One head anchor covers all
+   prior rows via the chain. Instantiated anchors: genesis + gap (id <= 16,827,536)
+   + periodic head anchors (head_anchor_record_*.json; first 2026-07-18, head id
+   31,955,276). Rows above the latest anchored head are chain-linked back to it
+   while awaiting the next periodic anchor.
 """
 import hashlib
 import json

@@ -22,8 +22,9 @@ verifiability is the point versus an HMAC chain, which only the key-holder can
 verify. Precise claim: secret-lessness alone does NOT stop AUTHOR backdating (an
 author can recompute a public chain under any timestamps); the EXTERNAL anchor
 does — a hash already OpenTimestamps-stamped into Bitcoin cannot be matched to
-altered content. That pin currently covers id <= 16,827,536; rows above it are
-chain-linked back to the anchored genesis but await their own head anchor.
+altered content. Pins: genesis + gap (id <= 16,827,536) + periodic head anchors
+(head_anchor_record_*.json; first 2026-07-18, head id 31,955,276). Rows above the
+latest anchored head are chain-linked back to it while awaiting the next.
 """
 import sys
 

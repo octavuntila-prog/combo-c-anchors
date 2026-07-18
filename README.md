@@ -13,11 +13,12 @@ chain (which only the key-holder can verify).
 What defeats *author* backdating is the **external Bitcoin anchor**, not secret-lessness on
 its own: an author can recompute a public chain under any timestamps, but cannot match a
 hash already stamped into Bitcoin. **Scope of the anchor today:** the OpenTimestamps proofs
-cover the **genesis corpus and the deploy-gap (id ≤ 16,827,536)** — not the growing
-per-signal Tier-A chain above the boundary (id > 16,827,536). "One external anchor on the
-head covers every prior row" is the *design principle*; that head anchor is **not yet
-instantiated**, so rows above the boundary currently rely on the unbroken chain back to the
-anchored genesis plus the pending head anchor.
+cover the **genesis corpus and the deploy-gap (id ≤ 16,827,536)**, plus **periodic head
+anchors** over the growing per-signal Tier-A chain — the first instantiated 2026-07-18
+(`head_anchor_record_20260718.json`: verified chain head at id 31,955,276, all 15,086,920
+chained rows covered). "One external anchor on the head covers every prior row" is how the
+head anchors work: each pins every chained row at or below its head. Rows added **after**
+the latest head anchor are chain-linked back to it and await the next periodic anchor.
 
 The genesis record also binds the **radar method** (`algorithm_sha256 = dee01a74…`,
 `RADAR_ALGORITHM.md` as-of 2026-06-06) alongside the corpus — a pre-registration
@@ -37,18 +38,24 @@ Every signal carries at least an existence bound, in three contiguous tiers:
 | Genesis corpus | `1 .. 16,807,130` | `corpus_sha256 = a5989f…` in `anchor_record_20260606.json`, OTS→Bitcoin |
 | Gap (inter-deploy cycle) | `16,807,131 .. 16,827,536` (20,406) | `gap_sha256 = 87fa8b…` in `gap_anchor_record_20260606.json`, OTS→Bitcoin |
 | Tier-A per-signal chain | `16,827,537 .. head` | each row's SHA-256 links to the prior; root = the genesis hash |
+| Head anchor (periodic) | all chained rows `≤` its head | `head_hash` in `head_anchor_record_*.json`, OTS→Bitcoin (first: 2026-07-18, head id 31,955,276) |
 
 **Sanity-check (self-verifying):**
 
 ```
 genesis(1 .. 16,807,130)  +  gap(16,807,131 .. 16,827,536)  =  16,827,536   (last pre-chain id)
                                                   boundary first chained  =  16,827,537
-chained rows  =  max(id)  -  16,827,537  +  1          (iff null_after_boundary = 0)
+chained rows  =  COUNT(*)  -  16,827,536              (iff null_after_boundary = 0)
 ```
 
-`null_after_boundary = 0` (no unchained row past the boundary) means the chain is gapless
-from 16,827,537 to the head, so the `chained = total - boundary + 1` identity holds
-exactly. `chain_verify.py` prints all three numbers.
+`null_after_boundary = 0` (no unchained row past the boundary) means every row past the
+boundary is chained, so the COUNT-based identity holds exactly (verified daily; e.g.
+2026-07-18: `31,914,456 − 16,827,536 = 15,086,920` chained). Note the identity is
+**COUNT-based, not max(id)-based**: the id-space above the boundary contains holes
+(AUTOINCREMENT ids consumed by rolled-back collection cycles and deleted unchained
+orphans — 40,820 as of 2026-07-18), so `max(id)` overcounts. No chained row is missing:
+the full walk links every chained row from the genesis root to the head.
+`chain_verify.py` prints all the numbers involved.
 
 ## Two-hop verification (copy-paste, any OpenTimestamps client)
 
