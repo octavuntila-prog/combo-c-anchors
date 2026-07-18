@@ -6,8 +6,18 @@ merely third-party tampering.
 
 The mechanism is a **public SHA-256 hash chain (no secret)** rooted in a frozen corpus
 whose hash is **OpenTimestamps-stamped into the Bitcoin blockchain**. Because the chain
-uses no secret, the author cannot regenerate it to fit backdated timestamps — the whole
-point versus an HMAC chain. One external anchor on the head covers every prior row.
+uses no secret, anyone can independently recompute and verify it against the data — no
+shared key, no trust in the author. That public verifiability is the point versus an HMAC
+chain (which only the key-holder can verify).
+
+What defeats *author* backdating is the **external Bitcoin anchor**, not secret-lessness on
+its own: an author can recompute a public chain under any timestamps, but cannot match a
+hash already stamped into Bitcoin. **Scope of the anchor today:** the OpenTimestamps proofs
+cover the **genesis corpus and the deploy-gap (id ≤ 16,827,536)** — not the growing
+per-signal Tier-A chain above the boundary (id > 16,827,536). "One external anchor on the
+head covers every prior row" is the *design principle*; that head anchor is **not yet
+instantiated**, so rows above the boundary currently rely on the unbroken chain back to the
+anchored genesis plus the pending head anchor.
 
 The genesis record also binds the **radar method** (`algorithm_sha256 = dee01a74…`,
 `RADAR_ALGORITHM.md` as-of 2026-06-06) alongside the corpus — a pre-registration

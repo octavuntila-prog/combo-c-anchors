@@ -16,8 +16,14 @@ reproduce independently:
       -> contained in anchor_record_20260606.json
       -> that record's SHA-256 is OTS-stamped (Bitcoin) => externally timestamped.
 Any rewrite of a row before an anchored head breaks the recomputed chain here.
-The hash uses NO secret (public SHA-256) — so the author cannot regenerate the
-chain to fit backdated timestamps; that is the whole point versus an HMAC chain.
+The hash uses NO secret (public SHA-256): anyone can recompute and verify the
+chain against the data — no shared key, no trust in the author. That public
+verifiability is the point versus an HMAC chain, which only the key-holder can
+verify. Precise claim: secret-lessness alone does NOT stop AUTHOR backdating (an
+author can recompute a public chain under any timestamps); the EXTERNAL anchor
+does — a hash already OpenTimestamps-stamped into Bitcoin cannot be matched to
+altered content. That pin currently covers id <= 16,827,536; rows above it are
+chain-linked back to the anchored genesis but await their own head anchor.
 """
 import sys
 

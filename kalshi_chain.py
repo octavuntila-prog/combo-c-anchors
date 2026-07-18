@@ -4,9 +4,15 @@ Shared canonical logic used by BOTH the collector patch (embedded copy) and
 chain_verify.py. Keep the two copies byte-identical to avoid verify drift.
 
 Threat model: defeat AUTHOR backdating, not just third-party tampering.
-=> public SHA-256 hash chain (no secret -> nothing to regenerate the chain with)
-   + periodic external anchoring of the head (OpenTimestamps / public repo).
-   One external anchor covers all prior rows via the chain.
+=> public SHA-256 hash chain (no secret -> anyone can recompute + verify against
+   the data; no shared key, no trust in the author -- vs an HMAC chain only the
+   key-holder can verify). Secret-lessness alone does NOT stop backdating: an
+   author can recompute a public chain under any timestamps. The EXTERNAL anchor
+   is what pins time -- a hash stamped into Bitcoin cannot be matched to altered
+   content.
+   + external anchoring (OpenTimestamps -> Bitcoin). By design one head anchor
+   covers all prior rows via the chain; today the instantiated anchors are the
+   genesis + gap (id <= 16,827,536) and the growing head awaits its own anchor.
 """
 import hashlib
 import json
