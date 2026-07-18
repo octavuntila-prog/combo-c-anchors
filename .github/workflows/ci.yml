@@ -1,0 +1,39 @@
+# CI for the Combo C anchors repo (audit 2026-07-17 item #9).
+#
+# Two guards on every push/PR:
+#   1. test_chain.py — the full chain-logic suite T1-T6. The two operator-local
+#      files (_snapshot_verify.py, kalshi_collector_container.py) are absent on a
+#      public checkout BY DESIGN: T6 prints explicit SKIP lines and still bonds
+#      the public twin + the in-test pinned constants. The full quadruplet runs
+#      on the operator machine (RUNBOOK: COMBO_C_REQUIRE_QUADRUPLET=1).
+#   2. _ci_verify_records.py — every OTS-stamped record must hash to exactly the
+#      digest committed in its .ots proof (catches any byte drift that would
+#      silently break the Bitcoin attestation, e.g. line-ending rewrites).
+#
+# Actions pinned by commit SHA (verification repo: no mutable-tag supply chain).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Compile all sources
+        run: python -m py_compile *.py
+      - name: Chain logic test suite (T1-T6)
+        run: python test_chain.py
+      - name: Install OpenTimestamps library (pinned)
+        run: pip install opentimestamps-client==0.7.2
+      - name: Anchor records byte-integrity vs .ots digests
+        run: python _ci_verify_records.py
