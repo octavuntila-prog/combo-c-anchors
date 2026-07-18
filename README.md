@@ -80,14 +80,28 @@ sha256sum gap_anchor_record_20260606.json
 #  -> 7dcc4ca59b5fb0187c83f2a7bc1e80f7190c38d0a4e6e1f16bac7856c37344f7
 ots verify gap_anchor_record_20260606.json.ots
 #  -> Bitcoin block 952650 / 952683 (stamped 2026-06-07)
+
+sha256sum head_anchor_record_20260718.json
+#  -> 1de5ee5c6ea5456889f4c5b253182ec49af4f49493089cce5be77c5f7709d80d
+ots verify head_anchor_record_20260718.json.ots
+#  -> Bitcoin block 958552 / 958554  (this is the anchor that time-bounds the
+#     15,086,920 per-signal Tier-A rows, id 16,827,537 .. head 31,955,276)
 ```
 
 A separate OTS stamp for the gap is structurally necessary: the genesis record is
 cryptographically closed and cannot be appended retroactively.
 
+> **Note on `head_anchor_record_20260718.json`'s `ots_status` field:** the record
+> was written *before* its `.ots` finished aggregating, so its embedded `ots_status`
+> still reads "pending." That record is byte-frozen (its SHA-256 is what the `.ots`
+> commits — re-editing it would break the attestation), so the field is a point-in-time
+> snapshot. The `.ots` proof beside it is the authority and is now **confirmed on-chain**
+> (blocks 958552/958554), as `ots verify` above shows.
+
 So the trust path is **chain root `a5989f` -> contained in a record -> `sha256(record)`
--> OTS proof -> Bitcoin block**. No trust in the author, the server, or this repo — only
-in SHA-256, OpenTimestamps, and Bitcoin.
+-> OTS proof -> Bitcoin block** (and the same for the head anchor over the per-signal
+rows). No trust in the author, the server, or this repo — only in SHA-256,
+OpenTimestamps, and Bitcoin.
 
 ## Verifying the chain itself
 
